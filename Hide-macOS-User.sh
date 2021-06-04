@@ -1,7 +1,5 @@
 #!/bin/bash
-getUserDir(){
-    dscl . -read /Users/$usr | grep NFSHomeDirectory | awk '{print $2}'
-}
+getUserDir(){ dscl . -read /Users/$usr | grep NFSHomeDirectory | awk '{print $2}' }
 
 
 ##args=("$@")
