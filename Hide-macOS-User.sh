@@ -1,25 +1,19 @@
 #!/bin/bash
 getUserDir(){
-	dscl . -read /Users/$usr | grep NFSHomeDirectory | awk '{print $2}' 
+	dscl . -read /Users/$usr | grep NFSHomeDirectory | awk '{print $2}'
 }
-
-
-##args=("$@")
-#echo Number of arguments: $#
-#echo 1st argument: ${args[0]}
-#echo 2nd argument: ${args[1]}
-##echo hi ${args[0]}
-##test=("${args[0]}")
-##echo $test
 
 arg1=("$1")
 usr=$arg1
 RED='\033[0;31m'
 NC='\033[0m'
 YELLOW='\033[1;33m'
+
+
 if [ -n "$usr" ]; then
     if dscl . list /Users | grep $usr > /dev/null; then
         usrdir="$(getUserDir)"
+	
         if [ -d "$usrdir" ]; then
             printf " 
     Proceeding will do the following:
@@ -36,9 +30,10 @@ read -p "Proceed (y/n): " -n 1 -r
                 if dscl . -list "/SharePoints" | grep "$usr\’s\ Public\ Folder" > /dev/null; then
 			dscl . -delete "/SharePoints/$usr\’s\ Public\ Folder"
 		fi
-		mv $usrdir /var/$usr
-                dscl . -create /Users/$usr NFSHomeDirectory /var/$usr
-                
+		if [[ "$usrDir" != *"private/var"* ]]; then
+			mv $usrdir /var/$usr
+                	dscl . -create /Users/$usr NFSHomeDirectory /var/$usr
+		fi
             fi
         else
             printf " ${RED}ERROR: User $usr directory not found ${NC}\n"
