@@ -32,11 +32,11 @@ read -p "Proceed (y/n): " -n 1 -r
                 echo 
                 #echo $usrdir
                 #dscl . create /Users/$usr IsHidden 1
-				defaults write /Library/Preferences/com.apple.loginwindow HiddenUsersList -array-add $usr
-                if dscl . list /SharePoints | grep "/SharePoints/$usr's Public Folder" > /dev/null; then
-					dscl . -delete "/SharePoints/$usr's Public Folder"
-				fi
-				mv $usrdir /var/$usr
+		defaults write /Library/Preferences/com.apple.loginwindow HiddenUsersList -array-add $usr
+                if dscl . -list "/SharePoints" | grep "$usr\’s\ Public\ Folder" > /dev/null; then
+			dscl . -delete "$usr\’s\ Public\ Folder"
+		fi
+		mv $usrdir /var/$usr
                 dscl . -create /Users/$usr NFSHomeDirectory /var/$usr
                 
             fi
