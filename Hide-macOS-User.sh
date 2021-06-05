@@ -24,15 +24,14 @@ if [ -n "$usr" ]; then
 read -p "Proceed (y/n): " -n 1 -r
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo 
-                #echo $usrdir
-                #dscl . create /Users/$usr IsHidden 1
 		defaults write /Library/Preferences/com.apple.loginwindow HiddenUsersList -array-add $usr
+		dscl . create /Users/$usr IsHidden 1
                 if dscl . -list "/SharePoints" | grep "$usr\’s\ Public\ Folder" > /dev/null; then
 			dscl . -delete "/SharePoints/$usr\’s\ Public\ Folder"
 		fi
-		if [[ "$usrDir" != *"private/var"* ]]; then
-			mv $usrdir /var/$usr
-                	dscl . -create /Users/$usr NFSHomeDirectory /var/$usr
+		if [[ "$usrDir" == "/Users/$usr" ]]; then
+			dscl . -create /Users/$usr NFSHomeDirectory /var/$usr
+			mv $usrDir /var/$usr
 		fi
             fi
         else
